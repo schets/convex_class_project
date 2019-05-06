@@ -42,8 +42,9 @@ def plot_svm(a, b, results, weights):
     ax.scatter(b[:, 0],b[:, 1], color='red')
     for (sep, off), color, weight in zip(results, colors, weights):
         plot_svm_line(a, b, sep, off, color, weight, ax)
+    legend = ax.legend(loc='upper left', shadow=True)
 
-    plt.title("SVM plane separating red and blue clusters")
+    plt.title("SVM planes with various biases towards red classification")
     plt.show()
 
 def run_example(seed, num, weight, var):
@@ -63,7 +64,7 @@ def run_example(seed, num, weight, var):
     results = [svm.train_linear_svm(a_train, b_train, weight)
                for weight in weights]
 
-    plot_svm(a_train, b_train, results, [])
+    plot_svm(a_train, b_train, results, weights)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate example plots for report',

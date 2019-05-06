@@ -77,8 +77,10 @@ def run_report(data, seed, train, weight, use_download):
 
     weight, off = svm.train_linear_svm(ham_train, spam_train, weight)
 
-    return (svm.score_svm(ham_test, np.ones(len(ham_test)), weight, off),
-            svm.score_svm(spam_test, -1*np.ones(len(spam_test)), weight, off))
+    ham_score = svm.score_svm(ham_test, np.ones(len(ham_test)), weight, off)
+    spam_score = svm.score_svm(spam_test, -1*np.ones(len(spam_test)), weight, off)
+    total_score = (ham_score * len(ham_test) + spam_score * len(spam_test)) / (len(ham_test) + len(spam_test))
+    return ham_score, spam_score, total_score
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run final report for svm classifier',
@@ -103,8 +105,9 @@ if __name__ == '__main__':
     if args.weight <= 0 or args.weight >= 1:
         parser.error("Spam weight is {}, must be between zero and one".format(args.weight))
 
-    ham, spam = run_report(args.data, args.seed, args.train, args.weight, args.use_download)
+    ham, spam, total = run_report(args.data, args.seed, args.train, args.weight, args.use_download)
 
     print("Score on ham is ", ham)
     print("Score on spam is ", spam)
+    print("Sore overall is", total)
 

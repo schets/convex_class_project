@@ -25,10 +25,6 @@ def train_linear_svm(ham, spam, weight):
         np.ones(len(ham)),
         -1 * np.ones(len(spam))
     ])
-    weights = np.concatenate([
-        weight * np.ones(len(ham)),
-        (1 - weight) * np.ones(len(spam))
-    ])
 
     vecs = np.concatenate([ham, spam])
 
@@ -36,11 +32,8 @@ def train_linear_svm(ham, spam, weight):
     off = Variable()
     slack = Variable(len(ham) + len(spam))
 
-    proj_point = diag(signs) * (vecs * beta + off)
-    close_penalty = cvx.sum(diag(weights) * cvx.pos(1 - proj_point))
-
-    prob = Problem(Minimize(norm(beta) + close_penalty),
-            [proj_point >= 1 - slack,
+    prob = Problem(Minimize(0.1*norm(beta) + cvx.sum(slack)),
+            [diag(signs) * (vecs * beta + off) >= 1 - slack,
              slack >= 0])
 
     prob.solve(verbose=True)
@@ -49,7 +42,6 @@ def train_linear_svm(ham, spam, weight):
 
 def score_svm(emails, desired, weight, off):
     val = emails @ weight + off
-    print(val, desired)
     desired_pos = desired > 0
     score_pos = val > 0
 
