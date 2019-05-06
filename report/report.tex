@@ -1,0 +1,85 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[retainorgcmds]{IEEEtrantools}
+%opening
+\title{SVM and Email Classification}
+\author{Samuel Schetterer}
+
+\begin{document}
+
+\maketitle
+\clearpage
+
+\section{Email Processing}
+Email processing takes a few different steps:
+
+\begin{itemize}
+	\item Obtain a dataset of spam and not-spam emails to test the classifier against
+	\item Clean undesireable content (actual emails, headers, etc) from the emails
+	\item Tokenize and stem the emails
+	\item Transform into some mathematical representation, here word vectors
+\end{itemize}
+
+\subsection{Dataset}
+
+For our email dataset, I acquire emails from the pulib corpus at https://spamassassin.apache.org/old/publiccorpus/. These are easily available for download with little work.
+
+The script I used for this can be found in the data/download\_email.sh folder
+
+\subsection{Cleaning}
+The emails are not immediately useful without some cleaning. They contain things like:
+
+
+\begin{itemize}
+	\item Email headers: "Received: from localhost (jalapeno [127.0.0.1])"
+	\item Urls: www.google.com
+	\item Email addresses
+	\item Punctuation
+	\item Non-letter characters
+	\item Stop words (and, the, ...)
+\end{itemize}
+
+We either strip fo replace this content from the email. Urls are replaced with httpaddr, emails are replaced with emailaddr, and the rest is stripped.
+
+The set of regexes and list of stop words used to clean the emails is in python/process\_email.py
+
+\subsection{Tokenize}
+
+We now tokenize and stem the emails. The stemming is nontrivial, since we want words like running and runs to be map to the same thing. For that, we use the porter-stemmer algorithm. There is an implementation provided with the Matlab source; however, since I don't have access to Matlab, I used the implementation from NLTK (https://github.com/nltk/nltk)
+
+\subsection{Word Vectors}
+
+To actually process the data, we need to turn it into a mathematical representation. This is done with the assistance of a vocabulary list provided with the project. For each stemmed word in the email, we see if there's a corresponding entry in the vocabularly list, and if so, add a vector with a 1 in the Nth dimension, where N is the number in the vocab list. This turns our problem into a mathematical problem witht he dimension of our vocabulary list.
+
+\subsection{Example stemming}
+
+\textbf{We start with:}
+
+Hi,all:
+
+Does anyone know how to list the biggest file in my
+root directory?or the second biggest ..etc...
+
+Because I want to find out what is the reason cause my
+root all most full.
+
+\textbf{Then after stripping it:}
+
+hiall anyone know list biggest file root directoryor second biggest etc want find reason cause root full
+
+\textbf{And after stemming:}
+
+hiall anyon know list biggest file root directoryor second biggest etc want find reason caus root full
+
+Notably, this does not correct grammar and spelling mistakes in the emails.
+
+\section{SVM mathematical model}
+The SVM is a mathematical model which relies on the idea of a 'support vector' to 
+
+\section{Visual Example|
+	
+\section{Results on email spam}
+
+\end{document}

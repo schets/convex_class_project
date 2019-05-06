@@ -1,0 +1,7 @@
+python/*.pyc
+python/__pycache__
+data/email_data
+*.email
+report/*.aux
+report/*.gz
+report/*.log
