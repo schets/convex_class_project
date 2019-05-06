@@ -92,16 +92,18 @@ We have some vector $\alpha$ and base point $\beta$ which describe our hyperplan
 
 \begin{equation}
 \begin{split}
-&\text{min: } \omega
+&\text{min: } -\omega
 \\
 &\text{s.t. } \alpha \cdot x_i - \beta <= \omega
 \\
 &\text{s.t. } \beta - \alpha \cdot y_i <= \omega
 \\
+&\text{s.t. } ||\alpha||_2 < K
+\\
 \end{split}
 \end{equation}
 
-Where $x$ is points in one class and $y$ is points in the other. This might generate a separating hyperplane like:
+Where $x$ is points in one class, $y$ is points in the other, and $K$ is an arbitrary positive constant, as is the choice of norm. This might generate a separating hyperplane like:
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{svm_low_var.png}
